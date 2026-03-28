@@ -1,28 +1,17 @@
-const express = require('express');
-const router = express.Router();
-const Project = require('../models/ProjectModel');
+// server/routes/project.js
+import express from "express";
+import { getAllProjects } from "../models/ProjectModel.js";
 
-// Get all projects
-router.get('/', async (req, res) => {
+const router = express.Router();
+
+router.get("/", async (req, res) => {
   try {
-    const projects = await Project.findAll();
+    const projects = await getAllProjects();
     res.json(projects);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    console.error("Error fetching projects::, err");
+    res.status(500).json({ error: err.message });
   }
 });
 
-// POST a new project (optional for adding)
-router.post('/', async (req, res) => {
-  try {
-    const { name, type, modelUrl } = req.body;
-    const project = await Project.create({ name, type, modelUrl });
-    res.status(201).json(project);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Server error' });
-  }
-});
-
-module.exports = router;
+export default router;

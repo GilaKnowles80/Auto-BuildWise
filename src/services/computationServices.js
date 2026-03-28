@@ -7,6 +7,6 @@ export function calculateBOQ(data) {
   return {}; // Replace with real BOQ calculation
 }
 
-export function calculateEstimator(data) {
+export function calculateTotalEstimator(data) {
   return {}; // Replace with real cost & material estimation
 }

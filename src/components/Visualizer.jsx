@@ -1,20 +1,50 @@
-import React, { useState } from "react";
-import { generateDesign } from "../services/designSenseService";
+import React, { Suspense } from "react";
+import { Canvas } from "@react-three/fiber";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { useLoader } from "@react-three/fiber";
+import { OrbitControls } from "@react-three/drei";
 
-export default function Visualizer({ planData }) {
-  const [imageUrl, setImageUrl] = useState("");
+/**
+ * Model component
+ * Safely loads a GLTF model and handles errors if URL is missing or wrong
+ */
+function Model({ url }) {
+  if (!url) {
+    return <mesh>
+      <boxGeometry args={[1, 1, 1]} />
+      <meshStandardMaterial color="red" />
+    </mesh>; // fallback placeholder
+  }
 
-  const handleGenerate = async () => {
-    const result = await generateDesign(planData);
-    setImageUrl(result.url);
-  };
+  try {
+    const gltf = useLoader(GLTFLoader, url);
+    return <primitive object={gltf.scene} />;
+  } catch (error) {
+    console.error("Failed to load 3D model:", error);
+    return <mesh>
+      <boxGeometry args={[1, 1, 1]} />
+      <meshStandardMaterial color="red" />
+    </mesh>; // fallback placeholder
+  }
+}
 
+/**
+ * Visualizer component
+ */
+export default function Visualizer({ modelUrl }) {
   return (
-    <div className="mt-4">
-      <button onClick={handleGenerate} className="px-3 py-1 bg-green-600 text-white rounded">
-        Generate Visual
-      </button>
-      {imageUrl && <img src={imageUrl} alt="AI Design" className="mt-2 border rounded" />}
+    <div style={{ width: "100%", height: "500px" }}>
+      <Canvas camera={{ position: [0, 2, 5], fov: 60 }}>
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[5, 5, 5]} intensity={1} />
+        <Suspense fallback={<mesh>
+          <boxGeometry args={[1, 1, 1]} />
+          <meshStandardMaterial color="yellow" />
+        </mesh>}>
+          <Model url={modelUrl} />
+        </Suspense>
+        <OrbitControls />
+      </Canvas>
     </div>
   );
 }

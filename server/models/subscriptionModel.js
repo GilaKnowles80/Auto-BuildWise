@@ -1,14 +1,8 @@
-import mongoose from "mongoose";
+// server/models/ProjectModel.js
+import { supabase } from "../index.js";
 
-const subscriptionSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  planType: { type: String, enum: ["Monthly", "Quarterly", "Bi-Annual", "Annual"], required: true },
-  startDate: { type: Date, default: Date.now },
-  endDate: { type: Date, required: true },
-  status: { type: String, enum: ["Active", "Expired", "Cancelled"], default: "Active" },
-  paymentGateway: { type: String, enum: ["Stripe", "PayMongo", "Xendit"], required: true },
-  transactionId: { type: String },
-});
-
-const Subscription = mongoose.model("Subscription", subscriptionSchema);
-export default Subscription;
+export async function getAllProjects() {
+  const { data, error } = await supabase.from("projects").select("*");
+  if (error) throw error;
+  return data;
+}

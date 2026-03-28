@@ -1,40 +1,43 @@
-// src/components/CadViewer.jsx
-import React from "react";
-import { Canvas } from "@react-three/fiber";
-import { OrbitControls, useGLTF } from "@react-three/drei";
+import React, { useEffect, useState } from "react";
+import { Canvas } from "@react-three/fiber"; // assuming you use react-three-fiber
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
-function Floor({ modelPath, yOffset }) {
-  const { scene } = useGLTF(modelPath);
-  const clone = scene.clone();
-  clone.position.y = yOffset;
-  return <primitive object={clone} />;
-}
+const CadViewer = ({ modelType = "residential", numFloors = 1, heightPerFloor = 3 }) => {
+  const [models, setModels] = useState([]);
 
-export default function CadViewer({
-  modelType = "residential", // e.g., residential, commercial, hotel
-  floors = 1,
-  heightPerFloor = 3,        // default floor height in meters
-}) {
-  // Dynamically build array of floors
-  const floorModels = [];
-  for (let i = 0; i < floors; i++) {
-    floorModels.push(
-      <Floor
-        key={i}
-        modelPath={/models/${modelType}/floor1.glb} // base model for stacking
-        yOffset={i * heightPerFloor}
-      />
-    );
-  }
+  useEffect(() => {
+    const loader = new GLTFLoader();
+    const loadedModels = [];
+
+    for (let i = 0; i < numFloors; i++) {
+      const modelPath = "/models/" + modelType + ".glb"; // ✅ concatenation, no $
+      const yOffset = i * heightPerFloor;
+
+      loader.load(
+        modelPath,
+        (gltf) => {
+          loadedModels.push({ gltf, yOffset });
+          if (loadedModels.length === numFloors) {
+            setModels([...loadedModels]);
+          }
+        },
+        undefined,
+        (error) => console.error("Error loading model:", modelPath, error)
+      );
+    }
+  }, [modelType, numFloors, heightPerFloor]);
 
   return (
-    <div className="w-full h-[600px] bg-gray-100 rounded-lg shadow-md">
-      <Canvas camera={{ position: [10, 10, 10], fov: 50 }}>
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[10, 20, 10]} intensity={1} />
-        {floorModels}
-        <OrbitControls />
-      </Canvas>
-    </div>
+    <Canvas camera={{ position: [0, 10, 20], fov: 50 }}>
+      {models.map((item, index) => (
+        <primitive
+          key={index}
+          object={item.gltf.scene}
+          position={[0, item.yOffset, 0]} // stacking
+        />
+      ))}
+    </Canvas>
   );
-}
+};
+
+export default CadViewer;

@@ -1,14 +1,27 @@
+import React from "react";
 import SummaryCard from "../components/SummaryCard";
+import AdminCards from "../components/AdminCards";
 
-export default function Summary() {
+function Summary() {
   return (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-bold mb-4">Summary</h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <SummaryCard title="Total Cost" value="$0.00" />
-        <SummaryCard title="Total Materials" value="0 units" />
-        <SummaryCard title="Projects Completed" value="0" />
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-6">Summary</h1>
+
+      {/* Example: display admin cards */}
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-6">
+        <AdminCards title="Total Projects" value={12} />
+        <AdminCards title="Completed BOQ" value={8} />
+        <AdminCards title="Pending Approvals" value={3} />
+      </div>
+
+      {/* Example: summary cards */}
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <SummaryCard title="Structural TPC" value="5 tasks" />
+        <SummaryCard title="Engineering & BOQ" value="8 tasks" />
+        <SummaryCard title="Estimator Progress" value="75%" />
       </div>
     </div>
   );
 }
+
+export default Summary;

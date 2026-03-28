@@ -4,10 +4,11 @@ export default function Navbar() {
       <h1 className="text-xl font-bold">BuildWise 🚀</h1>
       <div className="flex space-x-4">
         <a href="/" className="hover:text-gray-300">Summary</a>
-        <a href="/structural" className="hover:text-gray-300">Structural & TPC</a>
-        <a href="/engineering" className="hover:text-gray-300">Engineering & BOQ</a>
-        <a href="/estimator" className="hover:text-gray-300">Estimator</a>
-        <a href="/drawings" className="hover:text-gray-300">Drawings</a>
+        <a href="/structural" className="hover:text-gray-300">StructuralTPC</a>
+        <a href="/engineering" className="hover:text-gray-300">EngineeringBOQ</a>
+        <a href="/estimator" className="hover:text-gray-300">TotalEstimator</a>
+        <a href="/drawings" className="hover:text-gray-300">DrawingPerspective</a>
+        <a href="/drawings" className="hover:text-gray-300">AdminDashboard</a>
       </div>
     </div>
   );

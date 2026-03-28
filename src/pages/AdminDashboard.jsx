@@ -45,7 +45,7 @@ export default function AdminDashboard() {
                 <td className="px-4 py-2">{user.fullName}</td>
                 <td className="px-4 py-2">{user.email}</td>
                 <td className="px-4 py-2">{user.contactNumber}</td>
-                <td className="px-4 py-2">{${user.city}, ${user.town}, ${user.country}}</td>
+                <td className="px-4 py-2">{user.city}, {user.town}, {user.country}</td>
                 <td className="px-4 py-2">{user.subscriptionPlan}</td>
                 <td className="px-4 py-2">{user.language}</td>
                 <td className="px-4 py-2">{user.ip}</td>

@@ -1,75 +1,148 @@
-import { useEffect, useState } from "react";
-import { supabase } from "./supabaseClient";
-import Navbar from "./components/Navbar";
-import Sidebar from "./components/Sidebar";
-import AgentAssist from "./AgentAssist/AgentAssist"; // ✅ correct path
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-function App () {
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+// Components
+import Sidebar from "./components/Sidebar.jsx";
+import AdminCards from "./components/AdminCards.jsx";
+import CadViewer from "./components/CadViewer.jsx";
+import CostBreakdown from "./components/CostBreakdown.jsx";
+import FloorPlan2D from "./components/FloorPlan2D.jsx";
+import Footer from "./components/Footer.jsx";
+import ModelViewer from "./components/ModelViewer.jsx";
+import Navbar from "./components/Navbar.jsx";
+import NotificationBell from "./components/NotificationBell.jsx";
+import PertCpmChart from "./components/PertCpmChart.jsx";
+import SummaryCard from "./components/SummaryCard.jsx";
+import UserDashboard from "./components/UserDashboard.jsx";
+import Visualizer from "./components/Visualizer.jsx";
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      setLoading(true);
-      try {
-        const { data, error } = await supabase.from("projects").select("*");
-        if (error) {
-          console.error("Error fetching projects:", error);
-          setError(error.message);
-        } else {
-          setProjects(data);
-        }
-      } catch (err) {
-        console.error("Unexpected error:", err);
-        setError("Unexpected error occurred");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProjects();
-  }, []);
+// Pages
+import AdminDashboard from "./pages/AdminDashboard.jsx";
+import DrawingPerspective from "./pages/DrawingPerspective.jsx";
+import EngineeringBOQ from "./pages/EngineeringBOQ.jsx";
+import StructuralTPC from "./pages/StructuralTPC.jsx";
+import Summary from "./pages/Summary.jsx";
+import TotalEstimator from "./pages/TotalEstimator.jsx";
 
+// AgentAssist
+import AgentAssist from "./AgentAssist/AgentAssist.jsx";
+
+function App() {
   return (
-    <div className="flex h-screen font-sans">
-      {/* Sidebar */}
-      <Sidebar>
-        <AgentAssist /> {/* included in Sidebar */}
-      </Sidebar>
+    <BrowserRouter>
+      <div className="flex min-h-screen">
+        <Sidebar />
+        <div className="flex-1 flex flex-col">
+          <Navbar />
+          <div className="flex justify-between items-center p-4 border-b">
+            <NotificationBell />
+            <UserDashboard />
+          <div> 
+             <h2>3D ModelViewer</h2>
+             <Visualizer modelUrl="/models/myModel.glb" />
+             </div>
 
-      {/* Main content */}
-      <div className="flex-1 flex flex-col">
-        <Navbar />
+          {/* Routes */}
+          <div className="flex-1 p-6 overflow-auto">
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <AdminDashboard>
+                    <AdminCards />
+                    <SummaryCard />
+                    <Visualizer />
+                  </AdminDashboard>
+                }
+              />
 
-        <main className="p-6 overflow-auto">
-          <h1 className="text-3xl font-bold mb-6 text-center">
-            Auto-BuildWise Projects
-          </h1>
+              <Route
+                path="/projects"
+                element={
+                  <>
+                    <h2 className="text-xl font-bold mb-4">Projects</h2>
+                    <AdminCards />
+                  </>
+                }
+              />
 
-          {loading && <p className="text-center text-gray-500">Loading projects...</p>}
-          {error && <p className="text-center text-red-500 font-medium">Error: {error}</p>}
-          {!loading && !error && projects.length === 0 && (
-            <p className="text-center text-gray-600">No projects found.</p>
-          )}
-          {!loading && !error && projects.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {projects.map((project) => (
-                <div
-                  key={project.id}
-                  className="bg-white rounded-xl shadow-md p-5 hover:shadow-lg transition-shadow"
-                >
-                  <h2 className="text-xl font-semibold mb-2">{project.name}</h2>
-                  <p className="text-gray-700 mb-2">{project.description || "No description"}</p>
-                  <p className="text-gray-800 font-medium">
-                    Status: {project.status || "N/A"}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
-        </main>
+              <Route
+                path="/boq-tables"
+                element={
+                  <>
+                    <h2 className="text-xl font-bold mb-4">BOQTables</h2>
+                    <CostBreakdown />
+                  </>
+                }
+              />
+
+              <Route
+                path="/payments"
+                element={
+                  <>
+                    <h2 className="text-xl font-bold mb-4">Payments</h2>
+                    {/* Replace Caviar with the correct component */}
+                  </>
+                }
+              />
+
+              <Route
+                path="/schedules"
+                element={
+                  <>
+                    <h2 className="text-xl font-bold mb-4">Schedules</h2>
+                    <PertCpmChart />
+                  </>
+                }
+              />
+
+              <Route path="/summary" element={<Summary />} />
+
+              <Route
+                path="/structural-tpc"
+                element={
+                  <StructuralTPC>
+                    <FloorPlan2D />
+                    <CadViewer />
+                  </StructuralTPC>
+                }
+              />
+
+              <Route
+                path="/engineering-boq"
+                element={
+                  <EngineeringBOQ>
+                    <CostBreakdown />
+                  </EngineeringBOQ>
+                }
+              />
+
+              <Route
+                path="/estimator"
+                element={
+                  <TotalEstimator>
+                    <Visualizer />
+                  </TotalEstimator>
+                }
+              />
+
+              <Route
+                path="/drawings"
+                element={
+                  <DrawingPerspective>
+                    <CadViewer />
+                  </DrawingPerspective>
+                }
+              />
+
+              <Route path="/agent-assist" element={<AgentAssist />} />
+            </Routes>
+          </div>
+
+          <Footer />
+        </div>
       </div>
-    </div>
+    </BrowserRouter>
   );
 }
 

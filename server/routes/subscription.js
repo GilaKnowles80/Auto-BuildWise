@@ -1,5 +1,10 @@
-import express from "express";
-const router = express.Router();
+import { supabase } from "../index.js";
+
+export async function getAllPayments() {
+  const { data, error } = await supabase.from("payments").select("*");
+  if (error) throw error;
+  return data;
+}
 
 // GET subscription plans
 router.get("/", (req, res) => {

@@ -12,7 +12,7 @@ function UserDashboard() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">User Dashboard</h1>
+      <h1 className="text-2xl font-bold mb-4">UserDashboard</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {projects.map(p => (
           <div key={p.id} className="border p-4 rounded shadow">
