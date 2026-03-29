@@ -1,4 +1,7 @@
-export const users = [
+export function getAllUsers(req, res) {
+  res.json(users);
+}
+const users = [
   {
     id: 1,
     fullName: "John Doe",

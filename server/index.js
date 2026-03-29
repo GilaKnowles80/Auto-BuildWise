@@ -3,8 +3,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
-import projectRoutes from "./routes/project.js";
-import paymentRoutes from "./routes/payment.js";
+import projectRoutes from "./routes/projects.js";
+import paymentRoutes from "./routes/payments.js";
 import adminRoutes from "./routes/admin.js";
 import subscriptionRoutes from "./routes/subscription.js";
 import userRoutes from "./routes/users.js";
@@ -20,7 +20,7 @@ export const supabase = createClient(
 );
 
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = 3001;
 
 app.use(cors());
 app.use(express.json());

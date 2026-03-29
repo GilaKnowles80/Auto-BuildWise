@@ -1,16 +1,19 @@
-// server/routes/payment.js
 import express from "express";
-import { getAllPayments } from "../models/PaymentModel.js";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  try {
-    const payments = await getAllPayments();
-    res.json(payments);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+// Dummy data
+const payments = [
+  { id: 1, amount: 100, user: "Alice" },
+  { id: 2, amount: 200, user: "Bob" },
+];
+
+// Replace getAllPayments import with this function
+function getAllPayments(req, res) {
+  res.json(payments);
+}
+
+// Route
+router.get("/", getAllPayments);
 
 export default router;

@@ -1,16 +1,26 @@
 import express from "express";
-import { users } from "../models/userModel.js";
+import { getAllUsers } from "../models/userModels.js"; // dummy model file
+
 const router = express.Router();
 
-router.get("/users", (req, res) => {
-  res.json(users);
+// Routes for Admin
+
+// GET all users
+router.get("/users", getAllUsers);
+
+// Example: GET admin dashboard info (dummy)
+router.get("/dashboard", (req, res) => {
+  res.json({
+    totalUsers: 2,
+    totalProjects: 3,
+    totalPayments: 2,
+  });
 });
 
-router.get("/stats", (req, res) => {
-  const totalSubscribers = users.filter(u => u.subscriptionPlan).length;
-  const totalSales = users.reduce((acc, u) => acc + (u.subscriptionPrice || 0), 0);
-  const activeSubscriptions = users.filter(u => u.subscriptionPlan && new Date(u.subscriptionEnd) > new Date()).length;
-  res.json({ totalSubscribers, totalSales, activeSubscriptions });
+// Example: POST new admin action (dummy)
+router.post("/action", (req, res) => {
+  const { action } = req.body;
+  res.json({ message: "Admin action '" + action + "' received." });
 });
 
 export default router;
